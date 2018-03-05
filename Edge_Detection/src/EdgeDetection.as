@@ -1,6 +1,5 @@
 package 
 {
-	import com.adobe.serialization.json.JSON;
 	import com.greensock.TweenLite;
 	import com.kyo.event.MultiURLsRetryEvent;
 	import com.kyo.event.RetryEvent;
@@ -10,7 +9,6 @@ package
 	import com.shen100.log.Logger;
 	import com.utils.Log;
 	import com.view.bar.PlayControlBar;
-	import com.vpaid.VPAIDEvent;
 	
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -24,7 +22,6 @@ package
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.net.LocalConnection;
-	import flash.net.URLRequest;
 	import flash.system.Security;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -36,6 +33,7 @@ package
 	
 	import net.hires.debug.Stats;
 	
+	import utils.Calculation;
 	import utils.VideoGraphicsController;
 	
 	/**
@@ -99,11 +97,8 @@ package
 		private var conn:LocalConnection;
 		private var bytes:ByteArray;
 		
-		private var snapSDKUrl:String = "http://open.videoyi.com/sdk/player/SnapShotter/SnapShotter.swf";
-		private var toolContainerUrl:String = "http://open.videoyi.com/sdk/player/container/ToolContainer.swf";
-//		private var videoESdkUrl:String = "http://open.videoyi.com/sdk/VideoE/wasu/VideoEOverlayTest.swf";
-//		private var videoESdkUrl:String = "http://open.videoyi.com/sdk/VideoE/general/VideoEOverlayTest.swf";
-//		private var videoESdkUrl:String = "http://open.videoyi.com/sdk/player/wasu/VideoEOverlay.swf";
+		private var frameCounter:int = 80;
+		
 		private var videoESdkUrl:String;
 		
 		private var originWidth:Number;
@@ -113,8 +108,8 @@ package
 		private var originVideoHeight:Number;
 		private var totalVideoDuration:Number;// 视频总时长：单位为秒；
 		
-		private var snapShotterMC:Sprite;
-		private var toolContainerMC:Sprite;
+		private var snapLayer:Sprite;
+		private var snapShotterMC:SnapShotter1;
 		private var videoEMC:Sprite;
 		
 		private var videoArea:Shape;
@@ -190,6 +185,7 @@ package
 //			initLocalConnection();
 //			loadSnapShotter();
 //			loadImgs();
+			initVideoLayer();
 			tip_layer = new Sprite();
 			addChild(tip_layer);
 			
@@ -370,6 +366,8 @@ package
 		
 			mainVideo.height = stage.stageHeight;
 			
+			Calculation.setup(mainVideo.width, mainVideo.height);
+			
 			mainVideoContainer.addChild(mainVideo);
 			videoLayer.addChildAt(mainVideoContainer, 0);
 //			mainVideoContainer.visible = false;
@@ -480,7 +478,13 @@ package
 		
 		protected function onEnterFrm(evt:Event):void
 		{
+			frameCounter++;
 			controlBar && controlBar.onEnterFrm(evt);
+			if(frameCounter > 200)
+			{
+				frameCounter = 0;
+				snapShotterMC && snapShotterMC.onFrameUpdate();
+			}
 //			return;
 //			if(videoEMC && 1)
 //			{
@@ -564,8 +568,9 @@ package
 //				setMainVideoUrl("video12-26.mp4");
 //				setMainVideoUrl("http://localhost/video/jbx.mp4");
 //				setMainVideoUrl("http://localhost/video/wanwushengzhang.mp4");
-//				setMainVideoUrl("http://localhost/video/nvhai_weilian720p.mp4");
-				setMainVideoUrl("http://testopen.videoyi.com/video/ppq/fzd-vs-lgy.mp4");
+				setMainVideoUrl("http://testopen.videoyi.com/webs/wasm/web-dsp/demo/media/nzkgddfj.mp4");
+//				setMainVideoUrl("http://testopen.videoyi.com/video/ppq/fzd-vs-lgy.mp4");
+				
 				
 				mainVideoContainer.addEventListener(MouseEvent.CLICK, onMouseClick);	
 				mainVideoContainer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);	
@@ -578,12 +583,14 @@ package
 			btnLayer = new Sprite();
 			addChild(btnLayer);
 			
-			videoLayer = new Sprite();
-			videoLayer.name = "videoLayer";
-			addChild(videoLayer);
 			
-			childVideoLayer = new Sprite();
-			addChild(childVideoLayer);
+			
+			
+			
+			initSnapLayer();
+			
+			//childVideoLayer = new Sprite();
+			//addChild(childVideoLayer);
 			
 			videoLayer.addChildAt(mainVideoContainer, 0);
 			initText();
@@ -594,6 +601,23 @@ package
 			initHighLightLayer();
 			initOperateLayer();
 			//setMainVideoUrl(_mainVideoUrl);
+		}
+		
+		private function initVideoLayer():void
+		{
+			videoLayer = new Sprite();
+			videoLayer.name = "videoLayer";
+			addChild(videoLayer);
+		}
+		
+		
+		private function initSnapLayer():void
+		{
+			
+			snapLayer = new Sprite();
+			snapLayer.name = "snapLayer";
+			addChild(snapLayer);
+			
 		}
 		
 		private function initHighLightLayer():void
@@ -679,15 +703,14 @@ package
 				originVideoWidth = evt.info.width;
 				originVideoHeight = evt.info.height;
 				totalVideoDuration = evt.info.duration;
-//				onResize();
-				if(!videoEMC)
-				{
-//					loadVideoESDK();
-				}
+				
 //				initControlBar();
 				_metaInfoGotYet = true;
 				playBtn.mouseEnabled = true;
 				stage.frameRate = evt.info.videoframerate;
+				snapShotterMC = new SnapShotter1();
+				//				snapShotterMC.name = "snapShotterMC";
+				snapLayer.addChild(snapShotterMC);
 				onResize();
 			}
 		}		

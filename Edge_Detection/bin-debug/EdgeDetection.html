@@ -23,7 +23,7 @@
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
             body { margin:0; padding:0; overflow:auto; text-align:center; 
-                   background-color: #ffffff; }   
+                   background-color: #ff6600; }   
             object:focus { outline:none; }
             #flashContent { display:none; }
         </style>
@@ -43,17 +43,17 @@
             var flashvars = {};
             var params = {};
             params.quality = "high";
-            params.bgcolor = "#ffffff";
+            params.bgcolor = "#ff6600";
             params.allowscriptaccess = "always";
 			params.wmode = "direct";
             params.allowfullscreen = "true";
             var attributes = {};
-            attributes.id = "PIP_Paster";
-            attributes.name = "PIP_Paster";
+            attributes.id = "EdgeDetection";
+            attributes.name = "EdgeDetection";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "PIP_Paster.swf", "flashContent", 
-                "1280", "720", 
+                "EdgeDetection.swf", "flashContent", 
+                "960", "600", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
@@ -78,17 +78,17 @@
         </div>
         
         <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="1280" height="720" id="PIP_Paster">
-                <param name="movie" value="PIP_Paster.swf" />
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="960" height="600" id="EdgeDetection">
+                <param name="movie" value="EdgeDetection.swf" />
                 <param name="quality" value="high" />
-                <param name="bgcolor" value="#ffffff" />
+                <param name="bgcolor" value="#ff6600" />
                 <param name="allowScriptAccess" value="always" />
 				<param name="wmode" value="direct" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="PIP_Paster.swf" width="1280" height="720">
+                <object type="application/x-shockwave-flash" data="EdgeDetection.swf" width="960" height="600">
                     <param name="quality" value="high" />
-                    <param name="bgcolor" value="#ffffff" />
+                    <param name="bgcolor" value="#ff6600" />
                     <param name="allowScriptAccess" value="always" />
 					<param name="wmode" value="direct" />
                     <param name="allowFullScreen" value="true" />

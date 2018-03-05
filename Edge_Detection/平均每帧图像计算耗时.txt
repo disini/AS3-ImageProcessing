@@ -1,0 +1,16 @@
+平均每帧图像计算耗时：
+
+onLoadComplete
+[INFO]  05:35:21 PM    .455 ms   --LSPlayer-- SimpleVideo.resumeVideo() : ns = [object NetStream]
+
+[INFO]  05:35:21 PM    .460 ms   --LSPlayer-- simpleVideo.netStatusHandler() : event.info.code = NetStream.Unpause.Notify
+
+sobelFilter calculate finished! time passed is 11143ms .
+sobelFilter calculate finished! time passed is 11697ms .
+sobelFilter calculate finished! time passed is 11786ms .
+sobelFilter calculate finished! time passed is 11799ms .
+sobelFilter calculate finished! time passed is 15473ms .
+sobelFilter calculate finished! time passed is 14695ms .
+sobelFilter calculate finished! time passed is 14443ms .
+sobelFilter calculate finished! time passed is 13907ms .
+sobelFilter calculate finished! time passed is 17126ms .
